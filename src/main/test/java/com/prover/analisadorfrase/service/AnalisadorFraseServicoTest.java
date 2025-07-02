@@ -55,11 +55,15 @@ class AnalisadorFraseServicoTest {
     void testAnalisar_sincronizacaoBasica() throws InterruptedException {
         final StringBuilder log = new StringBuilder();
         Thread thread1 = new Thread(() -> {
+            log.append("Thread 1: Tentando adquirir lock.\n");
             analisadorFraseServico.analisar("primeira frase");
+            log.append("Thread 1: Lock liberado.\n");
         });
 
         Thread thread2 = new Thread(() -> {
+             log.append("Thread 2: Tentando adquirir lock.\n");
             analisadorFraseServico.analisar("segunda frase");
+             log.append("Thread 2: Lock liberado.\n");
         });
 
         thread1.start();
