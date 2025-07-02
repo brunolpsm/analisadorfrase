@@ -38,7 +38,7 @@ class AnalisadorFraseServicoTest {
 
         assertNotNull(resultado);
         assertEquals(1, resultado.size(), "Deve tratar diferentes casos da mesma palavra como uma só");
-        assertEquals(3, resultado.get("java"), "A contagem para 'java' (case-insensitive) deve ser 3");
+        assertEquals(3, resultado.get("java"), "A contagem para 'java' deve ser 3");
     }
 
     @Test
@@ -46,7 +46,6 @@ class AnalisadorFraseServicoTest {
     void testAnalisar_apenasEspacos() {
         String frase = "   ";
         Map<String, Integer> resultado = analisadorFraseServico.analisar(frase);
-
         assertNotNull(resultado, "O resultado não deve ser nulo para uma string com apenas espaços");
         assertTrue(resultado.isEmpty(), "O mapa de resultado deve estar vazio para uma string com apenas espaços");
     }
@@ -56,15 +55,11 @@ class AnalisadorFraseServicoTest {
     void testAnalisar_sincronizacaoBasica() throws InterruptedException {
         final StringBuilder log = new StringBuilder();
         Thread thread1 = new Thread(() -> {
-            log.append("Thread 1: Tentando adquirir lock.\n");
             analisadorFraseServico.analisar("primeira frase");
-            log.append("Thread 1: Lock liberado.\n");
         });
 
         Thread thread2 = new Thread(() -> {
-            log.append("Thread 2: Tentando adquirir lock.\n");
             analisadorFraseServico.analisar("segunda frase");
-            log.append("Thread 2: Lock liberado.\n");
         });
 
         thread1.start();
