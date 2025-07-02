@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Analisador de Frases - PROVER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet>
+        .custom-panel {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .ui-panelgrid .ui-panelgrid-cell {
+            padding: 10px;
+        }
+        .ui-datatable .ui-datatable-header {
+            background-color: #f4f4f4;
+        }
+    </h:outputStylesheet>
+</h:head>
+
+<h:body>
+    <h:form id="formFrase">
+        <p:messages autoUpdate="true" closable="true" severity="error,info"/>
+
+        <p:panel header="Analisador de Frases" styleClass="custom-panel">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-fluid">
+                <f:facet name="header">
+                    <h:outputText value="Entrada da Frase"/>
+                </f:facet>
+
+                <h:outputLabel for="entradaFrase" value="Digite a frase:" style="font-weight: bold;"/>
+                <p:inputText id="entradaFrase"
+                             value="#{fraseBean.frase}" required="true"
+                             requiredMessage="Por favor, digite uma frase."
+                             aria-label="Digite a frase para análise"
+                             style="width: 100%;"/>
+
+                <f:facet name="footer">
+                    <p:outputPanel style="display: flex; justify-content: space-evenly; gap: 10px;">
+                        <p:commandButton value="Analisar Frase"
+                                         action="#{fraseBean.analisarFrase()}" update="painelResultado formFrase"
+                                         icon="pi pi-search"
+                                         styleClass="ui-button-raised ui-button-primary"
+                                         process="@form"
+                                         onstart="PF('statusDialog').show()"
+                                         oncomplete="PF('statusDialog').hide()"
+                                         style="flex-grow: 1;"/>
+                        <p:commandButton value="Limpar"
+                                         action="#{fraseBean.limpar()}" update="painelResultado formFrase"
+                                         icon="pi pi-refresh"
+                                         styleClass="ui-button-raised ui-button-secondary"
+                                         style="flex-grow: 1;"/>
+                    </p:outputPanel>
+                </f:facet>
+            </p:panelGrid>
+        </p:panel>
+
+        <p:dialog widgetVar="statusDialog" modal="true" closable="false" showHeader="false" style="width: 200px;">
+            <p:graphicImage name="ajaxloadingbar.gif" library="images"/>
+            <h:outputText value=" Processando..."/>
+        </p:dialog>
+
+        <p:outputPanel id="painelResultado" styleClass="custom-panel">
+            <p:panel header="Ocorrências de Palavras"
+                     rendered="#{not empty fraseBean.contagemPalavras}"> <p:panelGrid columns="1" layout="grid" styleClass="ui-fluid">
+                    <p:outputPanel layout="inline">
+                        <h:outputLabel value="Palavras Distintas: " style="font-weight: bold;"/>
+                        <h:outputText value="#{fraseBean.quantidadePalavrasDistintas}"/> </p:outputPanel>
+
+                    <p:dataTable value="#{fraseBean.contagemPalavras.entrySet().toArray()}" var="ocorrencia"
+                                 emptyMessage="Nenhuma ocorrência encontrada."
+                                 styleClass="ui-datatable-responsive"> <p:column headerText="Palavra"> <h:outputText value="#{ocorrencia.key}"/>
+                        </p:column>
+                        <p:column headerText="Ocorrências"> <h:outputText value="#{ocorrencia.value}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panelGrid>
+            </p:panel>
+            <p:panel rendered="#{empty fraseBean.contagemPalavras}"> <h:outputText value="Digite uma frase para começar."/>
+            </p:panel>
+        </p:outputPanel>
+    </h:form>
+</h:body>
+</html>

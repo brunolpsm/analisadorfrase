@@ -1,0 +1,11 @@
+.custom-panel {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+.ui-panelgrid .ui-panelgrid-cell {
+    padding: 10px;
+}
+.ui-datatable .ui-datatable-header {
+    background-color: #f4f4f4;
+}
